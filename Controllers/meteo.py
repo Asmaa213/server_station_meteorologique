@@ -13,15 +13,23 @@ collection2 = db['predict 10 days']
 
 @app.route('/', methods=['GET'])
 def get_all_data():
-    # Exclure les identifiants ObjectId des résultats
     data = list(collection1.find({}, {"_id": 0}))
     return jsonify(data)
 
 @app.route('/ten_days', methods=['GET'])
 def get_ten_days():
-    # Exclure les identifiants ObjectId des résultats
     data = list(collection2.find({}, {"_id": 0}))
     return jsonify(data)
+
+@app.route('/today', methods=['GET'])
+def get_today_data():
+    today_data = collection2.find_one({}, {"_id": 0})
+    return jsonify(today_data)
+
+@app.route('/tomorrow', methods=['GET'])
+def get_tomorrow_data():
+    tomorrow_data = collection2.find({}, {"_id": 0}).skip(1).limit(1)
+    return jsonify(list(tomorrow_data)[0])
 
 if __name__ == '__main__':
     app.run(debug=True)
